@@ -1,8 +1,11 @@
 import {
   createUserWithEmailAndPassword,
+  GoogleAuthProvider,
   onAuthStateChanged,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 import React, { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -13,19 +16,23 @@ export const AuthContext = createContext();
 
 const AuthContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState("");
+
   const navigate = useNavigate();
 
   useEffect(() => {
     userObserver();
   }, []);
 
-  const createUser = async (email, password) => {
+  const createUser = async (email, password, displayName) => {
     try {
       let userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
+      await updateProfile(auth.currentUser, {
+        displayName: displayName,
+      });
       navigate("/");
       toastSuccessNotify("Registeren Successfully!");
     } catch (error) {
@@ -58,11 +65,25 @@ const AuthContextProvider = ({ children }) => {
     });
   };
 
+  const signUpProvider = () => {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        console.log(result);
+        navigate("/");
+        toastSuccessNotify("Logged is Successfully");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const values = {
     createUser,
     signIn,
     logOut,
     currentUser,
+    signUpProvider,
   };
 
   return (
