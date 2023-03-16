@@ -19,4 +19,4 @@ const App = () => {
 
 export default App;
 
-//en son navbarı düzeltirken kaldın
+//en son movie leri main componentine basmıstın orda kaldın
