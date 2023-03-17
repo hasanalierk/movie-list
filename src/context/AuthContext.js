@@ -2,6 +2,7 @@ import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
   onAuthStateChanged,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
@@ -10,7 +11,7 @@ import {
 import React, { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../auth/firebase";
-import { toastErrorNotify, toastSuccessNotify } from "../helper/ToastNotify";
+import { toastErrorNotify, toastSuccessNotify, toastWarnNotify } from "../helper/ToastNotify";
 
 export const AuthContext = createContext();
 
@@ -85,12 +86,21 @@ const AuthContextProvider = ({ children }) => {
       });
   };
 
+const forgotPassword = (email) => {
+  sendPasswordResetEmail(auth, email).then(() => {
+    toastWarnNotify("Please Check Your Mail Box!")
+  }).catch((err) => {
+    toastWarnNotify(err.message)
+  })
+}
+
   const values = {
     createUser,
     signIn,
     logOut,
-    currentUser,
     signUpProvider,
+    forgotPassword,
+    currentUser,
   };
 
   return (
