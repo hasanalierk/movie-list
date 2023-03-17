@@ -15,7 +15,9 @@ import { toastErrorNotify, toastSuccessNotify } from "../helper/ToastNotify";
 export const AuthContext = createContext();
 
 const AuthContextProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState("");
+  const [currentUser, setCurrentUser] = useState(
+    JSON.parse(sessionStorage.getItem("user")) || false
+  );
 
   const navigate = useNavigate();
 
@@ -59,8 +61,13 @@ const AuthContextProvider = ({ children }) => {
       if (user) {
         const { email, displayName, photoURL } = user;
         setCurrentUser({ email, displayName, photoURL });
+        sessionStorage.setItem(
+          "user",
+          JSON.stringify({ email, displayName, photoURL })
+        );
       } else {
         setCurrentUser(false);
+        sessionStorage.clear();
       }
     });
   };
