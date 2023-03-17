@@ -19,4 +19,4 @@ const App = () => {
 
 export default App;
 
-//en son movie leri main componentine basmıstın orda kaldın
+//en son login yoksa veya boş arama gönderildiğinde tostofy ile uyarı verdim ve orda kaldım 22:26
